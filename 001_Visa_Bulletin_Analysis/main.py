@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 from urllib.error import HTTPError
+import os
 
 # This program will attempt to read the USCIS monthly Visa bulletin's and extract the current
 # status and future month Green Card processing status.
@@ -69,3 +70,19 @@ for year in [2019, 2020, 2021]:
 
 print(india_final_action_dates_df)
 print(india_filing_dates_df)
+
+# Create the final target directory to save the analysis
+home_drive, home_path, directory_name = os.environ.get("HOMEDRIVE"), os.environ.get("HOMEPATH"), "Visa_Bulletin_Analysis"
+Excel_file_location = os.path.join(home_drive, home_path, "Desktop", directory_name)
+os.makedirs(Excel_file_location, exist_ok=True)
+
+file_extension = datetime.now().strftime("%d_%B_%Y-%I_%M_%S-%p")
+
+india_final_action_dates_output = os.path.join(Excel_file_location,
+                                               f"India_Final_Action_Dates_Analysis_{file_extension}.xlsx")
+india_filing_dates_output = os.path.join(Excel_file_location,
+                                               f"India_Filing_Dates_Analysis_{file_extension}.xlsx")
+
+# Store the analysis to excel
+india_final_action_dates_df.to_excel(india_final_action_dates_output)
+india_filing_dates_df.to_excel(india_filing_dates_output)
